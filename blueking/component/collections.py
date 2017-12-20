@@ -15,7 +15,7 @@ from .apis.bk_login import CollectionsBkLogin
 from .apis.cc import CollectionsCC
 from .apis.cmsi import CollectionsCMSI
 from .apis.job import CollectionsJOB
-
+from .apis.hf_sys import CollectionsHFSys
 
 # Available components
 AVAILABLE_COLLECTIONS = {
@@ -23,4 +23,5 @@ AVAILABLE_COLLECTIONS = {
     'cc': CollectionsCC,
     'cmsi': CollectionsCMSI,
     'job': CollectionsJOB,
+    'hf_sys': CollectionsHFSys
 }
