@@ -114,7 +114,7 @@ def check_cpu(request):
                 )
     except Exception as ex:
         logger.exception(ex)
-        return_data = {'result': False}
+        return_data = {'result': False, 'error_msg': str(ex)}
 
     # result = client.cc.get_app_host_list(kwargs)
     # return result
@@ -140,7 +140,7 @@ def history_detail(request, task_hist_id=None):
     try:
         if not task_hist_id:
             raise ValidationError('Invalid task_hist_id')
-
+        CPUCheckTaskHistory.objects.filter(task_hist__id=task_hist_id)
 
     except Exception as ex:
         logger.exception(ex)
