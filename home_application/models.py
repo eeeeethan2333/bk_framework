@@ -43,8 +43,8 @@ class CPUCheckTaskHistory(models.Model):
     result_status = models.CharField(max_length=3, choices=RESULT_STAT, default='F')
     ip = models.CharField(max_length=512)
 
-    start_time = models.DateTimeField(default=datetime.now())
-    end_time = models.DateTimeField(default=datetime.now())
+    start_time = models.DateTimeField(default=datetime.now(), null=True, blank=True)
+    end_time = models.DateTimeField(default=datetime.now(), null=True, blank=True)
     log_info = models.TextField(default='')
 
     class Meta:

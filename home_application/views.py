@@ -16,8 +16,10 @@ from models import TaskHistory, CPUCheckTaskHistory
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 import logging
+import datetime
 # Get an instance of a logger
 logger = logging.getLogger('root')
+
 
 def home(request):
     app_id = request.GET.get('app_id', '3')
@@ -95,14 +97,25 @@ def check_cpu(request):
 
                 ip = log_content['ip']
                 start_time = log_content['startTime']
+
+                # YYYY-MM-DD HH:MM[:ss
+                if start_time:
+                    start_time_dt = datetime.datetime.strptime(start_time, "%Y-%m-%d %H:%M:%S")
+                else:
+                    start_time_dt = None
                 end_time = log_content['endTime']
+                if end_time:
+                    end_time_dt = datetime.datetime.strptime(end_time, "%Y-%m-%d %H:%M:%S")
+                else:
+                    end_time_dt = start_time_dt
+
                 log_content_str = log_content['logContent']
                 CPUCheckTaskHistory.objects.create(
                     task_hist=task_hist,
                     result_status='S',
                     ip=ip,
-                    start_time=start_time,
-                    end_time=end_time if end_time else start_time,
+                    start_time=start_time_dt,
+                    end_time=end_time_dt,
                     log_info=log_content_str
                 )
             else:
@@ -114,6 +127,7 @@ def check_cpu(request):
                 )
     except Exception as ex:
         logger.exception(ex)
+        print str(ex)
         return_data = {'result': False, 'error_msg': str(ex)}
 
     # result = client.cc.get_app_host_list(kwargs)
@@ -144,6 +158,7 @@ def history_detail(request, task_hist_id=None):
 
     except Exception as ex:
         logger.exception(ex)
+
         data['result'] = False
         data['hist_detail'] = None
 
