@@ -136,14 +136,16 @@ def check_cpu(request):
 
 
 def task_history(request):
-
+    data = {'result': True}
     try:
         task_hist_list = [task_hist.to_json() for task_hist in TaskHistory.objects.all()]
-
+        data['task_hist_list'] = task_hist_list
     except Exception as ex:
         logger.exception(ex)
-        task_hist_list = []
-    return JsonResponse({'task_hist_list': task_hist_list})
+        # task_hist_list = []
+        data['error_msg'] = str(ex)
+
+    return JsonResponse(data)
 
 
 def history_detail(request, task_hist_id=None):

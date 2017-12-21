@@ -14,8 +14,19 @@ See the License for the specific language governing permissions and limitations 
 
 # import from lib
 # ===============================================================================
-# from django.contrib import admin
+from django.contrib import admin
+from models import *
 # from apps.__.models import aaaa
 #
 # admin.site.register(aaaa)
 # ===============================================================================
+
+
+@admin.register(TaskHistory)
+class TaskHistoryAdmin(admin.ModelAdmin):
+    search_fields = ['id']
+    list_display = ['id', 'created_time', 'user_name', 'task_name', 'ip', ]
+    list_display_links = ['id']
+    list_editable = ['created_time', 'user_name', 'task_name', 'ip',]
+    list_filter = ['user_name']
+
