@@ -156,8 +156,9 @@ def history_detail(request, task_hist_id=None):
     try:
         if not task_hist_id:
             raise ValidationError('Invalid task_hist_id')
-        CPUCheckTaskHistory.objects.filter(task_hist__id=task_hist_id)
-
+        value = CPUCheckTaskHistory.objects.get(task_hist__id=task_hist_id)
+        data['result'] = True
+        data['data'] = value.to_json()
     except Exception as ex:
         logger.exception(ex)
 

@@ -47,6 +47,15 @@ class CPUCheckTaskHistory(models.Model):
     end_time = models.DateTimeField(default=datetime.now(), null=True, blank=True)
     log_info = models.TextField(default='')
 
+    def to_json(self):
+        return {
+            'id': self.id,
+            'start_time': self.start_time.strftime("%b %d %Y %H:%M:%S") if self.start_time else '',
+            'end_time': self.end_time.strftime("%b %d %Y %H:%M:%S") if self.end_time else '',
+            'log_info': self.log_info,
+            'ip': self.ip
+        }
+
     class Meta:
         db_table = 'cpu_task_hist'
 

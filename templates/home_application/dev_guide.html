@@ -87,7 +87,7 @@
         // console.log('aaa')
         // jQuery methods go here...
         $.get(site_url+"task_history",function(result){
-            console.log(result.task_hist_list)
+            //console.log(result.task_hist_list)
             var trHtml = ''
             for(var i = 0; i < result.task_hist_list.length; i++){
                 task_hist = result.task_hist_list[i]
@@ -109,8 +109,21 @@
 
     });
     function detailBtnOnclick(id) {
-            console.log(id)
+        console.log(id)
+        $.get(site_url+"history_detail/"+id, function(result){
+            console.log(result)
+            if(result.result){
+                data = result.data
+                var result_str = ''
+                result_str += 'ID: ' + data.id + '\n'
+                result_str += 'IP: ' + data.ip + '\n'
+                result_str += 'Start: ' + data.start_time + '\n'
+                result_str += 'End: ' + data.end_time + '\n'
+                result_str += 'Log: ' + data.log_info + '\n'
+                alert(result_str)
 
-        }
+            }
+        })
+    }
 
 </script>
