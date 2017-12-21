@@ -7,7 +7,14 @@
         <meta name="description" content=""/>
         <meta name="author" content=""/>
         <link rel="shortcut icon" href="${STATIC_URL}favicon.ico" type="image/x-icon">
-        <!-- bootstrap css -->
+        <link href="https://magicbox.bkclouds.cc/static_api/v3/assets/select2-3.5.2/select2.css" rel="stylesheet">
+        <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/select2-3.5.2/select2.js"></script>
+
+
+        <link href="https://magicbox.bkclouds.cc/static_api/v3/assets/bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://magicbox.bkclouds.cc/static_api/v3/bk/css/bk.css" rel="stylesheet">
+      <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
+      <!-- bootstrap css -->
 		    <link href="${STATIC_URL}assets/bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
 		    <!-- 禁止bootstrap 响应式 （app根据自身需求启用或禁止bootstrap响应式） -->
 		    <link href="${STATIC_URL}assets/bootstrap-3.3.4/css/bootstrap_noresponsive.css" rel="stylesheet">
@@ -44,8 +51,8 @@
                     elif relative_path.startswith(SITE_URL + "contactus/"):
                       contactus = 'king-navbar-active'
                   %>
-                  <li class="${home}"><a href="${SITE_URL}"><span>首页</span></a></li>
-                  <li class="${dev_guide}"><a href="${SITE_URL}dev-guide/"><span>开发指引</span></a></li>
+                  <li class="${home}"><a href="${SITE_URL}"><span>执行任务</span></a></li>
+                  <li class="${dev_guide}"><a href="${SITE_URL}dev-guide/"><span>任务记录</span></a></li>
                   <li class="${contactus}"><a href="${SITE_URL}contactus/"><span>联系我们</span></a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">

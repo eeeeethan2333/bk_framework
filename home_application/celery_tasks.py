@@ -30,6 +30,12 @@ def async_task(x, y):
     logger.error(u"celery 定时任务执行成功，执行结果：{:0>2}:{:0>2}".format(x, y))
     return x + y
 
+@task()
+def hello_world():
+    logger.info('Hello World')
+
+
+
 
 def execute_task():
     """

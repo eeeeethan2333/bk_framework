@@ -17,4 +17,7 @@ urlpatterns = patterns(
     (r'^dev-guide/$', 'dev_guide'),
     (r'^contactus/$', 'contactus'),
     (r'^test/', 'test'),
+    (r'^cpu_check$', 'check_cpu'),
+    (r'^task_history$', 'task_history'),
+    (r'^history_detail/(?P<task_hist_id>\w+)$', 'history_detail'),
 )
