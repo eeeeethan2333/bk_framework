@@ -27,6 +27,5 @@ class TaskHistoryAdmin(admin.ModelAdmin):
     search_fields = ['id']
     list_display = ['id', 'created_time', 'user_name', 'task_name', 'ip', ]
     list_display_links = ['id']
-    list_editable = ['created_time', 'user_name', 'task_name', 'ip',]
+    list_editable = ['created_time', 'user_name', 'task_name', 'ip', ]
     list_filter = ['user_name']
-

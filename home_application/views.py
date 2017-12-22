@@ -73,19 +73,21 @@ def check_cpu(request):
         kwargs = {'app_id': '3',
                   'task_id': '2',
                   'steps': [{
-                        "scriptTimeout": 1000,
-                        "ipList": "1:"+ip,
-                        "stepId": 2,
-                        "account": "root",
-                }]}
+                      "scriptTimeout": 1000,
+                      "ipList": "1:" + ip,
+                      "stepId": 2,
+                      "account": "root",
+                  }]}
 
         result = client.job.execute_task(kwargs)
         if result.get('result', False):
             return_data['result'] = True
             data = result['data']
-            task_hist = TaskHistory.objects.create(user_name=request.user.username, task_name=data['taskInstanceName'], ip=ip)
+            task_hist = TaskHistory.objects.create(
+                user_name=request.user.username, task_name=data['taskInstanceName'], ip=ip)
 
-            kwargs = {'app_id': '3', 'task_instance_id': data['taskInstanceId']}
+            kwargs = {'app_id': '3',
+                      'task_instance_id': data['taskInstanceId']}
             task_log = client.job.get_task_ip_log(kwargs)
 
             if task_log.get('result', False):
@@ -100,12 +102,14 @@ def check_cpu(request):
 
                 # YYYY-MM-DD HH:MM[:ss
                 if start_time:
-                    start_time_dt = datetime.datetime.strptime(start_time, "%Y-%m-%d %H:%M:%S")
+                    start_time_dt = datetime.datetime.strptime(
+                        start_time, "%Y-%m-%d %H:%M:%S")
                 else:
                     start_time_dt = None
                 end_time = log_content['endTime']
                 if end_time:
-                    end_time_dt = datetime.datetime.strptime(end_time, "%Y-%m-%d %H:%M:%S")
+                    end_time_dt = datetime.datetime.strptime(
+                        end_time, "%Y-%m-%d %H:%M:%S")
                 else:
                     end_time_dt = start_time_dt
 
@@ -138,7 +142,8 @@ def check_cpu(request):
 def task_history(request):
     data = {'result': True}
     try:
-        task_hist_list = [task_hist.to_json() for task_hist in TaskHistory.objects.all()]
+        task_hist_list = [task_hist.to_json()
+                          for task_hist in TaskHistory.objects.all()]
         data['task_hist_list'] = task_hist_list
     except Exception as ex:
         logger.exception(ex)
@@ -166,4 +171,3 @@ def history_detail(request, task_hist_id=None):
         data['hist_detail'] = None
 
     return JsonResponse(data)
-
