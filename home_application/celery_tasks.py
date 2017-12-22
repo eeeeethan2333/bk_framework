@@ -18,7 +18,7 @@ import datetime
 from celery import task
 from celery.schedules import crontab
 from celery.task import periodic_task
-
+from blueking.component.shortcuts import get_client_by_request, get_client_by_user
 from common.log import logger
 
 
@@ -34,6 +34,20 @@ def async_task(x, y):
 def hello_world():
     logger.info('Hello World')
 
+
+@task()
+def monitor_cpu():
+
+    client = get_client_by_request('')
+    server_list = []
+    resp = client.cc.get_app_host_list({
+        "app_code": "hf-test",
+        "app_secret": "0b28ae9d-abc9-4044-b2f6-a6675d64a7e9",
+        'app_id': '3'})
+
+    if resp.get('result', False):
+        server_list.extend(resp.get('data'))
+        logger.info(str(server_list))
 
 
 

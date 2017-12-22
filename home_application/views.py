@@ -83,48 +83,13 @@ def check_cpu(request):
         if result.get('result', False):
             return_data['result'] = True
             data = result['data']
-            task_hist = TaskHistory.objects.create(user_name=request.user.username, task_name=data['taskInstanceName'], ip=ip)
+            task_hist = TaskHistory.objects.create(
+                user_name=request.user.username,
+                task_name=data['taskInstanceName'],
+                ip=ip,
+                task_instance_id= data['taskInstanceId']
+            )
 
-            kwargs = {'app_id': '3', 'task_instance_id': data['taskInstanceId']}
-            task_log = client.job.get_task_ip_log(kwargs)
-
-            if task_log.get('result', False):
-                task_log_data = task_log['data'][0]
-
-                stepAnalyseResult_list = task_log_data['stepAnalyseResult'][0]
-
-                log_content = stepAnalyseResult_list['ipLogContent'][0]
-
-                ip = log_content['ip']
-                start_time = log_content['startTime']
-
-                # YYYY-MM-DD HH:MM[:ss
-                if start_time:
-                    start_time_dt = datetime.datetime.strptime(start_time, "%Y-%m-%d %H:%M:%S")
-                else:
-                    start_time_dt = None
-                end_time = log_content['endTime']
-                if end_time:
-                    end_time_dt = datetime.datetime.strptime(end_time, "%Y-%m-%d %H:%M:%S")
-                else:
-                    end_time_dt = start_time_dt
-
-                log_content_str = log_content['logContent']
-                CPUCheckTaskHistory.objects.create(
-                    task_hist=task_hist,
-                    result_status='S',
-                    ip=ip,
-                    start_time=start_time_dt,
-                    end_time=end_time_dt,
-                    log_info=log_content_str
-                )
-            else:
-                CPUCheckTaskHistory.objects.create(
-                    task_hist=task_hist,
-                    result_status='F',
-                    ip=ip,
-
-                )
     except Exception as ex:
         logger.exception(ex)
         print str(ex)
@@ -148,17 +113,58 @@ def task_history(request):
     return JsonResponse(data)
 
 
-def history_detail(request, task_hist_id=None):
+def history_detail(request, task_instance_id=None):
     data = {
         'result': False
     }
 
     try:
-        if not task_hist_id:
-            raise ValidationError('Invalid task_hist_id')
-        value = CPUCheckTaskHistory.objects.get(task_hist__id=task_hist_id)
+        if not task_instance_id:
+            raise ValidationError('Invalid task_instance_id')
+        # value = CPUCheckTaskHistory.objects.get(task_hist__id=task_hist_id)
+
+        kwargs = {'app_id': '3', 'task_instance_id': task_instance_id}
+        client = get_client_by_request(request)
+        task_log = client.job.get_task_ip_log(kwargs)
+
+        if task_log.get('result', False):
+            task_log_data = task_log['data'][0]
+
+            stepAnalyseResult_list = task_log_data['stepAnalyseResult'][0]
+
+            log_content = stepAnalyseResult_list['ipLogContent'][0]
+
+            ip = log_content['ip']
+            start_time = log_content['startTime']
+
+            # YYYY-MM-DD HH:MM[:ss
+            if start_time:
+                start_time_dt = datetime.datetime.strptime(start_time, "%Y-%m-%d %H:%M:%S")
+            else:
+                start_time_dt = None
+            end_time = log_content['endTime']
+            if end_time:
+                end_time_dt = datetime.datetime.strptime(end_time, "%Y-%m-%d %H:%M:%S")
+            else:
+                end_time_dt = start_time_dt
+
+            log_content_str = log_content['logContent']
+            data['data'] = {
+                'ip': ip,
+                'start_time': start_time_dt,
+                'end_time': end_time_dt,
+                'log_info': log_content_str
+            }
+
+        else:
+            data['data'] = {
+                'error_msg': 'Error!',
+
+            }
+
+
         data['result'] = True
-        data['data'] = value.to_json()
+
     except Exception as ex:
         logger.exception(ex)
 

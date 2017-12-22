@@ -19,6 +19,7 @@ class TaskHistory(models.Model):
     user_name = models.CharField(max_length=512)
     task_name = models.CharField(max_length=512)
     ip = models.CharField(max_length=512)
+    task_instance_id = models.CharField(max_length=512, null=True, blank=True, default='0')
 
     def to_json(self):
         return {
@@ -26,7 +27,8 @@ class TaskHistory(models.Model):
             'created_time': self.created_time.strftime("%b %d %Y %H:%M:%S"),
             'user_name': self.user_name,
             'task_name': self.task_name,
-            'ip': self.ip
+            'ip': self.ip,
+            'task_instance_id': self.task_instance_id
         }
 
     class Meta:
