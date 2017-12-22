@@ -78,20 +78,28 @@
         })
     }
     $(function(){
-        initEStandLineChart({
+        function populateChart(){
+            initEStandLineChart({
             url: site_url+'cpu_hist/10.0.1.109',
             dataType: 'json',
             containerId: 'chart3_demo1'
-        });
-        initEStandLineChart({
-            url: site_url+'cpu_hist/10.0.1.220',
-            dataType: 'json',
-            containerId: 'chart3_demo2'
-        });
-        initEStandLineChart({
-            url: site_url+'cpu_hist/10.0.1.188',
-            dataType: 'json',
-            containerId: 'chart3_demo3'
-        });
+            });
+            initEStandLineChart({
+                url: site_url+'cpu_hist/10.0.1.220',
+                dataType: 'json',
+                containerId: 'chart3_demo2'
+            });
+            initEStandLineChart({
+                url: site_url+'cpu_hist/10.0.1.188',
+                dataType: 'json',
+                containerId: 'chart3_demo3'
+            });
+        }
+        populateChart();
+        setInterval(populateChart, 60*1000);
+
+
     });
+
+
 </script>
