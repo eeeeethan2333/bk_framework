@@ -1,49 +1,97 @@
 <%inherit file="/base.html"/>
 
 <%block name="content">
-    <style type="text/css">
-        #footer{
-            position: relative;
-            bottom: -40px;
-        }
-    </style>
-    <div class="page-contactus">
-        <!-- 内容 start-->
-        <!--comtactus-detail -->
-        <div class="container" >
-            <div class="tc" id="contactus">
-                <div class="weixin-img-arrow">
-                    <div>
-                        <img class="weixin-img " src="${STATIC_URL}img/weixin_icom.png">
-                    </div>
-                    <p>关注我们</p>
-                </div>
-                <div class="comtactus-way-arrow tc mt50">
-                    <div class="dbi border-right tc" style="width: 280px; padding-left: 60px">
-                        <div class="img-arrow">
-                            <img  class="" src="${STATIC_URL}img/icom_01.png">
-                        </div>
-                        <p class="mt20">深圳市南山区科兴学园C2</p>
-                    </div>
-                    <div class="dbi border-right tc" style="width: 180px">
-                        <div class="img-arrow">
-                            <img src="${STATIC_URL}img/icom_02.png">
-                        </div>
-                        <p class="mt20">企业QQ：800802001</p>
-                    </div>
-                    <div class="dbi tc" style="width: 280px">
-                        <div class="img-arrow">
-                            <img src="${STATIC_URL}img/icom_03.png">
-                        </div>
-                        <p class="mt20">邮箱：contactus_bk@tencent.com</p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <!-- 内容 start-->
+    <div class="container">
+        <h1>10.0.1.109</h1>
+        <div id="chart3_demo1" style="height:500px;border:1px solid #ccc;padding:10px;"></div>
+        <h1>10.0.1.220</h1>
+        <div id="chart3_demo2" style="height:500px;border:1px solid #ccc;padding:10px;"></div>
+        <h1>10.0.1.188</h1>
+        <div id="chart3_demo3" style="height:500px;border:1px solid #ccc;padding:10px;"></div>
     </div>
 </%block>
 <%block name='footerline'>
     <hr class="guide-cutting-line">
 </%block>
+
+<script type="text/javascript">
+    // Step:3 为模块加载器配置echarts的路径，从当前页面链接到echarts.js，定义所需图表路径
+
+    // Step:4 动态加载echarts然后在回调函数中开始使用，注意保持按需加载结构定义图表路径
+    // standard line chart
+    function createEStandLineChart(conf){
+        var myChart = echarts.init(document.getElementById(conf.selector));
+        var legendData = []
+        for(var i=0; i < conf.data.series.length;i++){
+            legendData.push(conf.data.series[i].name)
+        }
+        myChart.setOption({
+            tooltip : {
+                trigger: 'axis'
+            },
+            legend: {
+                y: 'bottom',
+                data:legendData
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {show: true, type: ['bar','line']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            xAxis : [
+                {
+                    type : 'category',
+                    data : conf.data.xAxis
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value',
+                    splitArea : {show : true}
+                }
+            ],
+            series : conf.data.series
+        });
+     }
+    function initEStandLineChart(conf){
+        $.ajax({
+            url: conf.url,
+            type: 'GET',
+            dataType: conf.dataType,
+            success: function(res){
+                //获取数据成功
+                if (res.result){
+
+
+                    createEStandLineChart({
+                        selector: conf.containerId, // 图表容器
+                        data: res.data, // 图表数据
+                    });
+                }
+            }
+        })
+    }
+    $(function(){
+        initEStandLineChart({
+            url: site_url+'cpu_hist/10.0.1.109',
+            dataType: 'json',
+            containerId: 'chart3_demo1'
+        });
+        initEStandLineChart({
+            url: site_url+'cpu_hist/10.0.1.220',
+            dataType: 'json',
+            containerId: 'chart3_demo2'
+        });
+        initEStandLineChart({
+            url: site_url+'cpu_hist/10.0.1.188',
+            dataType: 'json',
+            containerId: 'chart3_demo3'
+        });
+    });
+</script>

@@ -12,7 +12,7 @@ See the License for the specific language governing permissions and limitations 
 from common.mymako import render_mako_context, render_json
 from blueking.component.shortcuts import get_client_by_request, get_client_by_user
 from django.http import JsonResponse
-from models import TaskHistory, CPUCheckTaskHistory
+from models import TaskHistory, CPUHistory
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 import logging
@@ -172,4 +172,58 @@ def history_detail(request, task_instance_id=None):
         data['hist_detail'] = None
 
     return JsonResponse(data)
+
+
+def cpu_hist(request, ip):
+    return_data = {
+        "code": 0,
+        "result": True,
+        "messge": "success",
+        "data": {
+            "xAxis": [],
+            "series": []
+        }
+    }
+    try:
+
+        cpu_hist_list = CPUHistory.objects.filter(ip=ip).values_list(
+            'created_time',
+            'usr',
+            'sys',
+            'idle'
+        )[:20:-1]
+
+        x_axis = []
+        usr_list = []
+        sys_list = []
+        idle_list = []
+
+        for created_time, usr, sys, idle in cpu_hist_list:
+            x_axis.append(created_time.strftime("%b %d %Y %H:%M:%S"))
+            usr_list.append(usr)
+            sys_list.append(sys)
+            idle_list.append(idle)
+        return_data['data']['xAxis'] = x_axis
+        return_data['data']['series'].append({
+            "name": "usr",
+            "type": "line",
+            "data": usr_list
+        })
+        return_data['data']['series'].append({
+            "name": "sys",
+            "type": "line",
+            "data": sys_list
+        })
+        return_data['data']['series'].append({
+            "name": "idle",
+            "type": "line",
+            "data": idle_list
+        })
+    except Exception as ex:
+        logger.exception(ex)
+        return_data['result'] = False
+        return_data['messge'] = str(ex)
+
+    return JsonResponse(return_data)
+
 

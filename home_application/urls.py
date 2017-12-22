@@ -20,4 +20,5 @@ urlpatterns = patterns(
     (r'^cpu_check$', 'check_cpu'),
     (r'^task_history$', 'task_history'),
     (r'^history_detail/(?P<task_instance_id>\w+)$', 'history_detail'),
+    (r'^cpu_hist/(?P<ip>(\w|.)+)$', 'cpu_hist'),
 )

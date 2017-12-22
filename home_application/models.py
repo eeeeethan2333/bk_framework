@@ -36,30 +36,30 @@ class TaskHistory(models.Model):
         ordering = ['-id', '-created_time']
 
 
-class CPUCheckTaskHistory(models.Model):
-    task_hist = models.OneToOneField(TaskHistory)
-    RESULT_STAT = (
-        ('F', 'Failed'),
-        ('S', 'Succeed')
-    )
-    result_status = models.CharField(max_length=3, choices=RESULT_STAT, default='F')
+class CPUHistory(models.Model):
+    id = models.AutoField(primary_key=True)
     ip = models.CharField(max_length=512)
-
-    start_time = models.DateTimeField(default=datetime.now(), null=True, blank=True)
-    end_time = models.DateTimeField(default=datetime.now(), null=True, blank=True)
-    log_info = models.TextField(default='')
+    created_time = models.DateTimeField(default=datetime.now(), null=True, blank=True)
+    usr = models.FloatField(null=True, blank=True)
+    sys = models.FloatField(null=True, blank=True)
+    idle = models.FloatField(null=True, blank=True)
 
     def to_json(self):
         return {
             'id': self.id,
-            'start_time': self.start_time.strftime("%b %d %Y %H:%M:%S") if self.start_time else '',
-            'end_time': self.end_time.strftime("%b %d %Y %H:%M:%S") if self.end_time else '',
-            'log_info': self.log_info,
+            'created_time': self.created_time.strftime("%b %d %Y %H:%M:%S") if self.created_time else '',
+            'usr': str(self.usr),
+            'sys': str(self.sys),
+            'idle': str(self.idle),
             'ip': self.ip
         }
 
     class Meta:
-        db_table = 'cpu_task_hist'
+        db_table = 'cpu_hist'
+        ordering = ['-id', '-created_time']
+
+
+
 
 
 
